@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="1679674831374-1" author="FireShine">
+        <createTable tableName="distance">
+            <column name="from_city" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_distance"/>
+            </column>
+            <column name="to_city" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_distance"/>
+            </column>
+            <column name="distance" type="DOUBLE"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="from_city" baseTableName="distance" constraintName="FK_DISTANCE_ON_FROM_CITY" referencedColumnNames="id" referencedTableName="city"/>
+        <addForeignKeyConstraint baseColumnNames="to_city" baseTableName="distance" constraintName="FK_DISTANCE_ON_TO_CITY" referencedColumnNames="id" referencedTableName="city"/>
+    </changeSet>
+</databaseChangeLog>
