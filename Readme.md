@@ -1,10 +1,10 @@
 ## Distance calculator
 ### Description
 A simple project that allows to calculate distance between cities.
-There 2 calculation modes:
+There are 2 calculation modes:
 
  1. **Crowflight.** Calculates the shortest distance between two cities based on their coordinates online using formula.
- 2. **Distance matrix** Retrieves distance stored in the database.
+ 2. **Distance matrix.** Retrieves distance stored in the database.
 ### Prerequisites
  1. Tomcat 8.
 	- If using Tomcat 10+, you will have to place `.war` archive in `webapps-javaee` folder instead of default `webapps`.

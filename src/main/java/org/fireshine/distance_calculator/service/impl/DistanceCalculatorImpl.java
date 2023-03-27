@@ -39,8 +39,8 @@ public class DistanceCalculatorImpl implements DistanceCalculator {
     }
 
     @Override
-    public List<Object> getAll(CalculationRequestDto request) {
-        List<Object> result = new ArrayList<>();
+    public List<DistanceDto> getAll(CalculationRequestDto request) {
+        List<DistanceDto> result = new ArrayList<>();
         switch (request.getMode()) {
             case CROWFLIGHT:
                 result.addAll(calculateDistances(request.getFromCities(),
@@ -74,7 +74,8 @@ public class DistanceCalculatorImpl implements DistanceCalculator {
                         fromCity.getLongitude(), toCity.getLongitude());
                 String lengthDto = String.format("%.2f km", length);
                 result.add(new DistanceDto(fromCity.getName(), toCity.getName(),
-                        lengthDto, CalculationMode.CROWFLIGHT.name()));
+                        lengthDto, CalculationMode.CROWFLIGHT.name(), "")
+                );
             }
         }
         return result;
@@ -83,10 +84,10 @@ public class DistanceCalculatorImpl implements DistanceCalculator {
     //I'm not sure that this is the bet way to do it
     //But I'm sure, that if, for example, user requested 100 distances, and 1 or 2 weren't found -
     // it is a bad idea to return single exception instead of whole response
-    private List<Object> findDistances(List<City> fromCities,
+    private List<DistanceDto> findDistances(List<City> fromCities,
                                        List<City> toCities
     ) {
-        List<Object> result = new ArrayList<>();
+        List<DistanceDto> result = new ArrayList<>();
         for (City fromCity : fromCities) {
             for (City toCity : toCities) {
                 try {
@@ -94,9 +95,12 @@ public class DistanceCalculatorImpl implements DistanceCalculator {
                                             .findByFromCityByToCity(fromCity, toCity);
                     String lengthDto = String.format("%.2f km", distance.getDistance());
                     result.add(new DistanceDto(fromCity.getName(), toCity.getName(),
-                            lengthDto, CalculationMode.DISTANCE_MATRIX.name()));
+                            lengthDto, CalculationMode.DISTANCE_MATRIX.name(), "")
+                    );
                 } catch (DistanceNotFoundException e) {
-                    result.add(e.getMessage());
+                    result.add(new DistanceDto(fromCity.getName(), toCity.getName(),
+                            "-1", CalculationMode.DISTANCE_MATRIX.name(), e.getMessage())
+                    );
                 }
             }
         }

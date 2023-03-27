@@ -1,6 +1,7 @@
 package org.fireshine.distance_calculator.controller;
 
 import org.fireshine.distance_calculator.dto.CalculationRequestDto;
+import org.fireshine.distance_calculator.dto.DistanceDto;
 import org.fireshine.distance_calculator.service.DistanceCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,14 +26,14 @@ public class CalculationController {
     }
 
     @PostMapping("/calculator")
-    public Page<Object> calculate(@RequestBody CalculationRequestDto request,
+    public Page<DistanceDto> calculate(@RequestBody CalculationRequestDto request,
                                   Pageable pageable
     ) {
-        List<Object> distances = distanceCalculator.getAll(request);
+        List<DistanceDto> distances = distanceCalculator.getAll(request);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), distances.size());
         return new PageImpl<>(distances.subList(start, end),
-                                        pageable, distances.size());
+                                pageable, distances.size());
     }
 
 }
