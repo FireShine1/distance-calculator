@@ -17,6 +17,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UploadServiceImpl implements UploadService {
@@ -37,6 +39,8 @@ public class UploadServiceImpl implements UploadService {
         Unmarshaller cityUnmarshaller;
         Unmarshaller distanceUnmarshaller;
         XMLStreamReader streamReader;
+        List<City> cities = new ArrayList<>();
+        List<Distance> distances = new ArrayList<>();
 
         XMLInputFactory inputFactory = XMLInputFactory.newFactory();
         streamReader = inputFactory.createXMLStreamReader(inputStream);
@@ -53,16 +57,18 @@ public class UploadServiceImpl implements UploadService {
                 if ("City".equals(elementName)) {
                     JAXBElement<City> cityElement = cityUnmarshaller.unmarshal(streamReader, City.class);
                     City city = cityElement.getValue();
-                    cityService.save(city);
+                    cities.add(city);
                 }
                 if ("Distance".equals(elementName)) {
                     JAXBElement<Distance> distanceElement = distanceUnmarshaller.unmarshal(streamReader, Distance.class);
                     Distance distance = distanceElement.getValue();
-                    distanceService.save(distance);
+                    distances.add(distance);
                 }
             }
             streamReader.next();
         }
         streamReader.close();
+        cityService.saveAll(cities);
+        distanceService.saveAll(distances);
     }
 }
